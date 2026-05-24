@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ — Minbaev Dental</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f8ff;--white:#fff;--sky:#2979ff;--sky2:#00c6fb;
+  --grad:linear-gradient(130deg,#2979ff,#00c6fb);
+  --red:#ef4444;--green:#10b981;
+  --text:#111827;--muted:#64748b;--border:rgba(41,121,255,.15);
+  --shadow:0 4px 24px rgba(41,121,255,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-box{background:var(--white);border-radius:24px;padding:44px 40px;max-width:400px;width:100%;box-shadow:var(--shadow);text-align:center}
+.login-logo{font-size:2.5rem;margin-bottom:.5rem}
+.login-box h2{font-size:1.5rem;font-weight:700;margin-bottom:.4rem}
+.login-box p{color:var(--muted);font-size:.9rem;margin-bottom:1.8rem}
+.inp{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--border);font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg);transition:border-color .2s;color:var(--text)}
+.inp:focus{border-color:var(--sky)}
+.login-btn{width:100%;margin-top:1rem;padding:13px;background:var(--grad);border:none;border-radius:50px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(41,121,255,.35)}
+.login-err{color:var(--red);font-size:.85rem;margin-top:.8rem;display:none}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none}
+.top-bar{background:var(--white);border-bottom:1px solid var(--border);padding:16px 5vw;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.top-logo{font-weight:800;font-size:1.1rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logout-btn{background:none;border:1.5px solid var(--border);padding:7px 18px;border-radius:50px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+.dash-inner{max-width:900px;margin:0 auto;padding:2.5rem 5vw}
+.dash-title{font-size:1.6rem;font-weight:800;margin-bottom:.4rem}
+.dash-sub{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--white);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px}
+.stat-ico{width:48px;height:48px;border-radius:13px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.stat-n{font-size:1.8rem;font-weight:800;line-height:1}
+.stat-l{font-size:.78rem;color:var(--muted);margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.tab{padding:8px 20px;border-radius:50px;border:1.5px solid var(--border);font-size:.88rem;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--grad);color:#fff;border-color:transparent}
+
+/* Review cards */
+.reviews-list{display:flex;flex-direction:column;gap:1rem}
+.rv-card{background:var(--white);border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start;border:1px solid transparent;transition:border-color .2s}
+.rv-card:hover{border-color:var(--border)}
+.rv-card.pending-card{border:1.5px dashed rgba(41,121,255,.3);background:#fafcff}
+.rv-head{display:flex;align-items:center;gap:10px;margin-bottom:.5rem;flex-wrap:wrap}
+.rv-name{font-weight:700;font-size:.95rem}
+.rv-stars{color:#f6c90e;font-size:.85rem}
+.rv-svc{font-size:.72rem;color:var(--sky);font-weight:700;background:rgba(41,121,255,.08);padding:2px 10px;border-radius:50px}
+.rv-txt{font-size:.9rem;color:var(--muted);line-height:1.65;margin-bottom:.5rem}
+.rv-time{font-size:.72rem;color:#b0bcc8}
+.rv-status{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:50px}
+.rv-status.approved{background:rgba(16,185,129,.1);color:var(--green)}
+.rv-status.pending{background:rgba(41,121,255,.1);color:var(--sky)}
+
+/* Action buttons */
+.rv-actions{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;flex-shrink:0}
+.btn-del{background:#fff0f0;color:var(--red);border:1.5px solid rgba(239,68,68,.25);padding:7px 16px;border-radius:50px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.btn-del:hover{background:var(--red);color:#fff}
+.btn-approve{background:rgba(16,185,129,.1);color:var(--green);border:1.5px solid rgba(16,185,129,.25);padding:7px 16px;border-radius:50px;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.btn-approve:hover{background:var(--green);color:#fff}
+
+.empty-state{text-align:center;padding:3rem;color:var(--muted);font-size:.95rem}
+.empty-ico{font-size:2.5rem;margin-bottom:.7rem}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:100;background:var(--grad);color:#fff;padding:13px 22px;border-radius:14px;font-weight:700;font-size:.88rem;box-shadow:0 6px 24px rgba(41,121,255,.4);transform:translateY(60px);opacity:0;transition:all .35s}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Loader */
+.loader{text-align:center;padding:2rem;color:var(--muted)}
+.spinner{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--sky);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:600px){
+  .stats-row{grid-template-columns:1fr}
+  .rv-card{grid-template-columns:1fr}
+  .rv-actions{flex-direction:row;align-items:center}
+  .login-box{padding:32px 22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">🦷</div>
+    <h2>Minbaev Dental</h2>
+    <p>Панель управления отзывами</p>
+    <input class="inp" id="passInp" type="password" placeholder="Введите пароль" onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="login-btn" onclick="doLogin()">Войти →</button>
+    <div class="login-err" id="loginErr">❌ Неверный пароль</div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <div class="top-bar">
+    <div class="top-logo">🦷 Minbaev Dental — Админ</div>
+    <button class="logout-btn" onclick="logout()">Выйти</button>
+  </div>
+
+  <div class="dash-inner">
+    <h1 class="dash-title">Управление отзывами</h1>
+    <p class="dash-sub">Просматривайте, одобряйте и удаляйте отзывы пациентов.</p>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-ico">✅</div><div><div class="stat-n" id="sApproved">—</div><div class="stat-l">Опубликовано</div></div></div>
+      <div class="stat-card"><div class="stat-ico">⏳</div><div><div class="stat-n" id="sPending">—</div><div class="stat-l">На модерации</div></div></div>
+      <div class="stat-card"><div class="stat-ico">⭐</div><div><div class="stat-n" id="sAvgRating">—</div><div class="stat-l">Средний рейтинг</div></div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('approved',this)">✅ Опубликованные</button>
+      <button class="tab" onclick="switchTab('pending',this)">⏳ На модерации</button>
+    </div>
+
+    <div class="reviews-list" id="reviewsList">
+      <div class="loader"><div class="spinner"></div><br>Загружаем...</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WEBHOOK = 'https://dental-webhook.onrender.com';
+const ADMIN_PASS = 'minbaev2024';
+let currentTab = 'approved';
+let allApproved = [];
+let allPending  = [];
+
+// ── LOGIN ──
+function doLogin(){
+  const pass = document.getElementById('passInp').value;
+  if(pass === ADMIN_PASS){
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('passInp').value = '';
+    document.getElementById('passInp').focus();
+  }
+}
+
+function logout(){
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('passInp').value = '';
+}
+
+// ── LOAD ──
+async function loadAll(){
+  document.getElementById('reviewsList').innerHTML = '<div class="loader"><div class="spinner"></div><br>Загружаем...</div>';
+  try{
+    const [ra, rp] = await Promise.all([
+      fetch(`${WEBHOOK}/approved`),
+      fetch(`${WEBHOOK}/pending`)
+    ]);
+    allApproved = ra.ok ? await ra.json() : [];
+    allPending  = rp.ok ? await rp.json() : [];
+  }catch(e){
+    allApproved=[]; allPending=[];
+    showToast('⚠️ Не удалось загрузить данные с сервера');
+  }
+
+  // Stats
+  document.getElementById('sApproved').textContent = allApproved.length;
+  document.getElementById('sPending').textContent  = allPending.length;
+  const avg = allApproved.length
+    ? (allApproved.reduce((s,r)=>s+r.stars,0)/allApproved.length).toFixed(1)
+    : '—';
+  document.getElementById('sAvgRating').textContent = allApproved.length ? avg+'★' : '—';
+
+  render();
+}
+
+// ── TABS ──
+function switchTab(tab, el){
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ── RENDER ──
+function render(){
+  const list = currentTab==='approved' ? [...allApproved].reverse() : [...allPending].reverse();
+  const wrap = document.getElementById('reviewsList');
+
+  if(!list.length){
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-ico">${currentTab==='approved'?'📭':'🎉'}</div>${currentTab==='approved'?'Нет опубликованных отзывов':'Нет отзывов на модерации'}</div>`;
+    return;
+  }
+
+  wrap.innerHTML = list.map(r => `
+    <div class="rv-card ${currentTab==='pending'?'pending-card':''}" id="card_${r.id}">
+      <div>
+        <div class="rv-head">
+          <span class="rv-name">${esc(r.name)}</span>
+          <span class="rv-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span>
+          ${r.svc?`<span class="rv-svc">💊 ${esc(r.svc)}</span>`:''}
+          <span class="rv-status ${currentTab}">${currentTab==='approved'?'✅ Опубликован':'⏳ На проверке'}</span>
+        </div>
+        <div class="rv-txt">"${esc(r.txt)}"</div>
+        <div class="rv-time">${fmtDate(r.ts)} · ID: ${r.id}</div>
+      </div>
+      <div class="rv-actions">
+        ${currentTab==='pending'
+          ? `<button class="btn-approve" onclick="approveReview('${r.id}')">✅ Одобрить</button>`
+          : ''}
+        <button class="btn-del" onclick="deleteReview('${r.id}')">🗑 Удалить</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── DELETE ──
+async function deleteReview(id){
+  if(!confirm('Удалить этот отзыв? Действие необратимо.')) return;
+  try{
+    const resp = await fetch(`${WEBHOOK}/delete`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ id, adminPass: ADMIN_PASS })
+    });
+    const data = await resp.json();
+    if(data.ok){
+      allApproved = allApproved.filter(r=>r.id!==id);
+      document.getElementById('sApproved').textContent = allApproved.length;
+      // Пересчитать рейтинг
+      const avg = allApproved.length
+        ? (allApproved.reduce((s,r)=>s+r.stars,0)/allApproved.length).toFixed(1)
+        : '—';
+      document.getElementById('sAvgRating').textContent = allApproved.length ? avg+'★' : '—';
+      // Убрать карточку с анимацией
+      const card = document.getElementById('card_'+id);
+      if(card){ card.style.transition='opacity .3s,transform .3s'; card.style.opacity='0'; card.style.transform='translateX(20px)'; setTimeout(()=>card.remove(),300); }
+      showToast('🗑 Отзыв удалён');
+    } else {
+      showToast('❌ Ошибка: '+data.error);
+    }
+  }catch(e){ showToast('⚠️ Ошибка соединения с сервером'); }
+}
+
+// ── APPROVE (из админки) ──
+async function approveReview(id){
+  try{
+    const resp = await fetch(`${WEBHOOK}/approve`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ id, adminPass: ADMIN_PASS })
+    });
+    const data = await resp.json();
+    if(data.ok){
+      const review = allPending.find(r=>r.id===id);
+      if(review){
+        allPending  = allPending.filter(r=>r.id!==id);
+        allApproved.push({...review, status:'approved', approvedAt:Date.now()});
+        document.getElementById('sPending').textContent  = allPending.length;
+        document.getElementById('sApproved').textContent = allApproved.length;
+      }
+      const card = document.getElementById('card_'+id);
+      if(card){ card.style.transition='opacity .3s'; card.style.opacity='0'; setTimeout(()=>card.remove(),300); }
+      showToast('✅ Отзыв одобрен и опубликован!');
+    } else {
+      showToast('❌ Ошибка: '+data.error);
+    }
+  }catch(e){ showToast('⚠️ Ошибка соединения'); }
+}
+
+// ── UTILS ──
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function fmtDate(ts){ if(!ts) return ''; return new Date(ts).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}) }
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+</script>
+</body>
+</html>
