@@ -898,12 +898,14 @@ const BASE = [
   {id:'b3',name:'Нилуфар У.',stars:5,svc:'Виниры',txt:'Сделала виниры — результат превзошёл ожидания. Улыбка мечты! Команда — настоящие профессионалы.',ts:Date.now()-864000000},
 ];
 
-/* Load approved from storage */
+/* Load approved from webhook server */
+const WEBHOOK_URL = 'https://dental-webhook.onrender.com';
+
 async function loadFeed(){
   let approved=[];
   try{
-    const r=await window.storage.get('mdc_approved');
-    if(r) approved=JSON.parse(r.value);
+    const res=await fetch(`${WEBHOOK_URL}/approved`);
+    if(res.ok) approved=await res.json();
   }catch(e){ approved=[] }
 
   const all=[...approved].reverse().concat(BASE);
@@ -936,30 +938,19 @@ async function submitReview(){
 
   const review={id:'r'+Date.now(), name, txt, svc, stars:selStars, ts:Date.now(), status:'pending'};
 
-  /* Save to pending */
-  let pending=[];
-  try{ const r=await window.storage.get('mdc_pending'); if(r) pending=JSON.parse(r.value) }catch(e){}
-  pending.push(review);
-  await window.storage.set('mdc_pending',JSON.stringify(pending));
-
-  /* Notify admin in Telegram with inline approve/reject buttons */
-  const stars='★'.repeat(review.stars)+'☆'.repeat(5-review.stars);
-  const msg=
-    `⭐ *НОВЫЙ ОТЗЫВ — на модерации*\n`+
-    `━━━━━━━━━━━━━━━━━━\n`+
-    `👤 ${esc(name)}   ${stars}\n`+
-    `💊 Услуга: ${svc||'не указана'}\n\n`+
-    `📝 _"${esc(txt)}"_\n`+
-    `━━━━━━━━━━━━━━━━━━\n`+
-    `🆔 ID: \`${review.id}\`\n`+
-    `⏰ ${new Date().toLocaleString('ru-RU')}`;
-
-  await tgSend(msg,{
-    inline_keyboard:[[
-      {text:'✅ Одобрить', callback_data:`approve_${review.id}`},
-      {text:'❌ Отклонить', callback_data:`reject_${review.id}`}
-    ]]
-  });
+  /* Отправить на сервер — сервер сам уведомит Telegram */
+  try{
+    const resp = await fetch(`${WEBHOOK_URL}/pending`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(review)
+    });
+    if(!resp.ok) throw new Error('server error');
+  }catch(e){
+    console.warn('pending error',e);
+    showToast('⚠️ Ошибка отправки. Попробуйте ещё раз.',4000);
+    return;
+  }
 
   /* Reset */
   clearFields(['rvName','rvTxt','rvSvc']); selStars=0;
