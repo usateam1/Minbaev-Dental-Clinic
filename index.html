@@ -901,6 +901,29 @@ const BASE = [
 /* Load approved from webhook server */
 const WEBHOOK_URL = 'https://dental-webhook.onrender.com';
 
+// Сохранить pending отзыв локально
+function savePendingLocally(review){
+  try{
+    const list = JSON.parse(localStorage.getItem('mdc_pending_local')||'[]');
+    // Не дублировать
+    if(!list.find(r=>r.id===review.id)){
+      list.unshift(review);
+      localStorage.setItem('mdc_pending_local', JSON.stringify(list));
+    }
+  }catch(e){}
+}
+
+// Загрузить локальные pending, убрать уже одобрённые
+function getLocalPending(approvedIds){
+  try{
+    const list = JSON.parse(localStorage.getItem('mdc_pending_local')||'[]');
+    // Удалить те что уже одобрены — чтобы не дублировать
+    const filtered = list.filter(r=>!approvedIds.includes(r.id));
+    localStorage.setItem('mdc_pending_local', JSON.stringify(filtered));
+    return filtered;
+  }catch(e){ return [] }
+}
+
 async function loadFeed(){
   let approved=[];
   try{
@@ -908,23 +931,32 @@ async function loadFeed(){
     if(res.ok) approved=await res.json();
   }catch(e){ approved=[] }
 
-  const all=[...approved].reverse().concat(BASE);
+  const approvedIds = approved.map(r=>r.id);
+  const localPending = getLocalPending(approvedIds);
+
+  // Порядок: мои pending сверху → одобренные → базовые
+  const all=[...localPending, ...approved.slice().reverse(), ...BASE];
   const wrap=document.getElementById('feedWrap');
   const cnt=document.getElementById('feedCount');
   cnt.textContent=all.length+' отзывов';
 
   if(!all.length){ wrap.innerHTML='<div class="feed-empty">Пока нет отзывов — будьте первым!</div>'; return }
 
-  wrap.innerHTML=all.map(r=>`
-    <div class="feed-item">
+  wrap.innerHTML=all.map(r=>{
+    const isPending = r.status==='pending';
+    return `
+    <div class="feed-item" style="${isPending?'border:1.5px dashed rgba(41,121,255,.35)':''}">
       <div class="fi-head">
         <span class="fi-name">${esc(r.name)}</span>
         <span class="fi-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span>
       </div>
       ${r.svc?`<div class="fi-svc">💊 ${esc(r.svc)}</div>`:''}
       <div class="fi-txt">"${esc(r.txt)}"</div>
-      <div class="fi-time">${relTime(r.ts)}</div>
-    </div>`).join('');
+      <div class="fi-time" style="${isPending?'color:var(--sky);font-weight:600':''}">
+        ${isPending ? '⏳ Ожидает одобрения администратором' : relTime(r.ts)}
+      </div>
+    </div>`
+  }).join('');
 }
 
 /* Submit new review */
@@ -936,26 +968,43 @@ async function submitReview(){
   if(!txt){  highlightEl(document.getElementById('rvTxt')); return }
   if(!selStars){ showToast('⭐ Пожалуйста, выберите оценку!',3000); return }
 
+  // Показать состояние загрузки на кнопке
+  const btn = document.querySelector('.lf-submit');
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Отправляем...';
+  btn.disabled = true;
+
   const review={id:'r'+Date.now(), name, txt, svc, stars:selStars, ts:Date.now(), status:'pending'};
 
-  /* Отправить на сервер — сервер сам уведомит Telegram */
+  /* Отправить на сервер */
+  let sent = false;
   try{
     const resp = await fetch(`${WEBHOOK_URL}/pending`, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(review)
     });
-    if(!resp.ok) throw new Error('server error');
-  }catch(e){
-    console.warn('pending error',e);
-    showToast('⚠️ Ошибка отправки. Попробуйте ещё раз.',4000);
+    if(resp.ok) sent = true;
+  }catch(e){ console.warn('pending error',e); }
+
+  // Сброс кнопки
+  btn.textContent = origText;
+  btn.disabled = false;
+
+  if(!sent){
+    showToast('⚠️ Сервер недоступен. Попробуйте через минуту.',5000);
     return;
   }
 
-  /* Reset */
+  // Сохранить локально — чтобы не пропадал при обновлении ленты
+  savePendingLocally(review);
+  // Перерисовать ленту сразу
+  await loadFeed();
+
+  /* Reset формы */
   clearFields(['rvName','rvTxt','rvSvc']); selStars=0;
   document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
-  showToast('🙏 Спасибо за отзыв! Он появится после проверки.',5000);
+  showToast('🙏 Спасибо за отзыв! Он появится после проверки администратором.',5000);
 }
 
 /*
