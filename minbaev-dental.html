@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minbaev Dental Clinic — Ваша идеальная улыбка в Чирчике</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:        #f5f8ff;
+  --white:     #ffffff;
+  --navy:      #0b2056;
+  --sky:       #2979ff;
+  --sky2:      #00c6fb;
+  --grad:      linear-gradient(130deg,#2979ff 0%,#00c6fb 100%);
+  --grad-r:    linear-gradient(130deg,#00c6fb 0%,#2979ff 100%);
+  --soft:      rgba(41,121,255,.09);
+  --text:      #111827;
+  --muted:     #64748b;
+  --border:    rgba(41,121,255,.15);
+  --shadow:    0 6px 40px rgba(41,121,255,.11);
+  --radius:    22px;
+  --fd:        'Cormorant Garamond', serif;
+  --fb:        'Cabinet Grotesk', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ══════════════════════════════════════
+   UTILITY
+══════════════════════════════════════ */
+.grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+.section{padding:96px 7vw}
+.s-tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);margin-bottom:.6rem}
+.s-title{font-family:var(--fd);font-size:clamp(1.9rem,3.6vw,3rem);font-weight:800;line-height:1.15;margin-bottom:.8rem}
+.s-sub{font-size:1rem;color:var(--muted);line-height:1.75;max-width:560px}
+.center{text-align:center}.center .s-sub{margin:0 auto}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 7vw;
+  background:rgba(245,248,255,.82);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+nav.scrolled{box-shadow:0 4px 28px rgba(41,121,255,.13)}
+.nav-logo{font-family:var(--fd);font-size:1.35rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{font-size:.9rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--sky)}
+.nav-cta{background:var(--grad);color:#fff;border:none;padding:10px 26px;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--fb)}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(41,121,255,.38)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.burger span{width:24px;height:2px;background:var(--navy);border-radius:2px;display:block;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--white);z-index:199;padding:1.5rem 7vw;box-shadow:0 12px 40px rgba(41,121,255,.12);flex-direction:column;gap:1.2rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1.05rem;font-weight:600;color:var(--text);padding:.3rem 0;border-bottom:1px solid var(--border)}
+.mobile-menu .nav-cta{width:100%;text-align:center;margin-top:.5rem}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero{
+  min-height:100vh;padding:130px 7vw 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;
+  position:relative;overflow:hidden;
+}
+.blob{position:absolute;border-radius:50%;pointer-events:none;filter:blur(72px)}
+.blob1{width:560px;height:560px;background:radial-gradient(circle,rgba(41,121,255,.16),transparent 70%);top:-120px;left:-160px}
+.blob2{width:480px;height:480px;background:radial-gradient(circle,rgba(0,198,251,.14),transparent 70%);bottom:-80px;right:60px}
+.hero-dots{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(41,121,255,.18) 1.2px,transparent 1.2px);
+  background-size:34px 34px;
+  mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,#000 30%,transparent 100%);
+}
+/* left */
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(41,121,255,.08);border:1px solid rgba(41,121,255,.22);
+  padding:6px 16px;border-radius:50px;font-size:.8rem;font-weight:600;color:var(--sky);
+  margin-bottom:1.6rem;
+}
+.dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--sky);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+.hero-h1{font-family:var(--fd);font-size:clamp(2.6rem,5.2vw,4.4rem);line-height:1.08;font-weight:800;margin-bottom:1.2rem}
+.hero-sub{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2rem;max-width:480px}
+.checks{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.2rem}
+.checks li{display:flex;align-items:center;gap:10px;font-size:.97rem;font-weight:500}
+.chk{width:22px;height:22px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;flex-shrink:0}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:2rem}
+.btn-p{background:var(--grad);color:#fff;border:none;padding:15px 34px;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--fb)}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(41,121,255,.42)}
+.btn-o{background:transparent;color:var(--sky);border:2px solid var(--sky);padding:13px 30px;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:var(--fb)}
+.btn-o:hover{background:var(--sky);color:#fff}
+.social-proof{display:flex;align-items:center;gap:12px}
+.avatars{display:flex}
+.av{width:36px;height:36px;border-radius:50%;border:2.5px solid #fff;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:#fff;margin-left:-9px}
+.av:first-child{margin-left:0}
+.sp-text{font-size:.85rem;color:var(--muted);font-weight:500}
+.sp-text strong{color:var(--text)}
+/* right */
+.hero-right{position:relative;display:flex;justify-content:center;align-items:center}
+.hero-glow{position:absolute;width:110%;height:110%;border-radius:50%;background:radial-gradient(circle,rgba(0,198,251,.22),transparent 65%);top:-5%;left:-5%;z-index:0}
+.img-frame{
+  position:relative;z-index:1;
+  width:min(430px,88vw);aspect-ratio:4/5;
+  background:var(--grad);border-radius:36px;padding:3.5px;
+}
+.img-inner{
+  width:100%;height:100%;border-radius:33px;overflow:hidden;
+  background:linear-gradient(145deg,#ddeeff,#c5eefa);
+  display:flex;align-items:center;justify-content:center;
+}
+.float-card{
+  position:absolute;bottom:28px;left:-42px;z-index:2;
+  background:var(--white);border-radius:18px;padding:14px 20px;
+  box-shadow:0 10px 44px rgba(41,121,255,.2);
+  display:flex;align-items:center;gap:12px;
+  animation:float 3.2s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.fc-ico{font-size:1.7rem}
+.fc-l{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.fc-v{font-size:1.15rem;font-weight:800;color:var(--navy)}
+
+/* ══════════════════════════════════════
+   TICKER
+══════════════════════════════════════ */
+.ticker-wrap{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;position:relative}
+.ticker-track{display:flex;gap:0;animation:ticker 28s linear infinite;width:max-content}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{padding:0 2.4rem;font-size:.82rem;font-weight:700;color:#b0bcc8;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.ticker-sep{color:rgba(41,121,255,.4);padding:0 .2rem}
+
+/* ══════════════════════════════════════
+   ADVANTAGES
+══════════════════════════════════════ */
+.adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3rem}
+.adv-card{
+  background:var(--white);border-radius:var(--radius);padding:32px 26px;
+  box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s;
+  border:1px solid transparent;
+}
+.adv-card:hover{transform:translateY(-9px);box-shadow:0 24px 52px rgba(41,121,255,.19);border-color:var(--border)}
+.adv-ico{width:54px;height:54px;border-radius:15px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.1rem}
+.adv-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.adv-card p{font-size:.9rem;color:var(--muted);line-height:1.68}
+
+/* ══════════════════════════════════════
+   STATS
+══════════════════════════════════════ */
+.stats-wrap{margin:0 7vw;border-radius:28px;background:var(--grad);padding:64px 7vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;color:#fff}
+.stat-n{font-family:var(--fd);font-size:clamp(2.6rem,5vw,3.8rem);font-weight:800;line-height:1}
+.stat-l{font-size:.9rem;opacity:.82;margin-top:.4rem}
+
+/* ══════════════════════════════════════
+   HOW
+══════════════════════════════════════ */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3.5rem;position:relative}
+.how-grid::before{
+  content:'';position:absolute;top:50px;left:19%;right:19%;height:2px;
+  background:repeating-linear-gradient(90deg,var(--sky) 0 14px,transparent 14px 24px);
+}
+.how-step{text-align:center;padding:0 16px}
+.how-n{width:64px;height:64px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--fd);font-size:1.6rem;font-weight:800;color:#fff}
+.how-ico{font-size:2rem;margin-bottom:.8rem}
+.how-step h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.how-step p{font-size:.9rem;color:var(--muted);line-height:1.68}
+
+/* ══════════════════════════════════════
+   REVIEWS (static 3)
+══════════════════════════════════════ */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:3rem}
+.rev-card{background:var(--white);border-radius:var(--radius);padding:30px 26px;box-shadow:var(--shadow)}
+.rev-q{font-family:var(--fd);font-size:4rem;line-height:1;color:var(--sky);opacity:.22;margin-bottom:.3rem}
+.rev-txt{font-size:.95rem;line-height:1.72;margin-bottom:1.3rem}
+.rev-foot{display:flex;align-items:center;gap:12px}
+.rev-av{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;color:#fff;flex-shrink:0}
+.rev-name{font-weight:700;font-size:.9rem}
+.rev-stars{color:#f6c90e;font-size:.82rem;margin-top:2px}
+
+/* ══════════════════════════════════════
+   LIVE REVIEWS SECTION
+══════════════════════════════════════ */
+.live-section{background:var(--white);border-radius:28px;margin:0 7vw 80px;padding:56px 5vw;box-shadow:var(--shadow)}
+.live-inner{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
+
+/* Form side */
+.lf-tag{font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sky);margin-bottom:.5rem;display:block}
+.lf-title{font-family:var(--fd);font-size:1.9rem;font-weight:800;margin-bottom:.6rem}
+.lf-sub{color:var(--muted);font-size:.93rem;line-height:1.7;margin-bottom:1.5rem}
+.star-row{display:flex;gap:5px;margin-bottom:1.3rem}
+.star-btn{font-size:1.9rem;cursor:pointer;color:#d1d5db;transition:color .15s,transform .15s;background:none;border:none;padding:0;line-height:1}
+.star-btn.lit{color:#f6c90e;transform:scale(1.12)}
+.fi{width:100%;padding:13px 16px;border-radius:13px;border:1.5px solid var(--border);font-size:.94rem;font-family:var(--fb);background:var(--bg);outline:none;transition:border-color .2s;color:var(--text)}
+.fi:focus{border-color:var(--sky)}
+textarea.fi{min-height:120px;resize:vertical;margin-bottom:.9rem}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.9rem}
+.lf-submit{width:100%;padding:14px;background:var(--grad);border:none;border-radius:50px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s;font-family:var(--fb);margin-top:.3rem}
+.lf-submit:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(41,121,255,.4)}
+.lf-note{font-size:.76rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+/* Feed side */
+.feed-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.feed-title{font-weight:700;font-size:.97rem}
+.feed-badge{font-size:.72rem;font-weight:700;padding:3px 10px;background:rgba(41,121,255,.1);color:var(--sky);border-radius:50px}
+.feed-wrap{display:flex;flex-direction:column;gap:.9rem;max-height:440px;overflow-y:auto;padding-right:6px}
+.feed-wrap::-webkit-scrollbar{width:3px}
+.feed-wrap::-webkit-scrollbar-thumb{background:var(--sky);border-radius:4px}
+.feed-item{background:var(--bg);border-radius:15px;padding:16px 18px;animation:slideUp .45s ease;border:1px solid var(--border)}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fi-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+.fi-name{font-weight:700;font-size:.88rem}
+.fi-stars{color:#f6c90e;font-size:.8rem}
+.fi-svc{font-size:.72rem;color:var(--sky);font-weight:600;margin-bottom:.35rem}
+.fi-txt{font-size:.87rem;color:var(--muted);line-height:1.6}
+.fi-time{font-size:.7rem;color:#b0bcc8;margin-top:.4rem}
+.feed-empty{text-align:center;color:var(--muted);font-size:.9rem;padding:2.5rem 0}
+.pending-info{background:rgba(41,121,255,.07);border:1px dashed rgba(41,121,255,.28);border-radius:12px;padding:12px 16px;font-size:.82rem;color:var(--sky);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+
+/* ══════════════════════════════════════
+   FAQ
+══════════════════════════════════════ */
+.faq-list{max-width:800px;margin:3rem auto 0;display:flex;flex-direction:column;gap:1rem}
+.faq-item{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.faq-q{padding:22px 28px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:.97rem;gap:1rem;user-select:none}
+.faq-arr{font-size:1.1rem;color:var(--sky);transition:transform .35s;flex-shrink:0}
+.faq-item.open .faq-arr{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s ease,padding .3s;padding:0 28px;font-size:.93rem;color:var(--muted);line-height:1.72}
+.faq-item.open .faq-a{max-height:220px;padding-bottom:22px}
+
+/* ══════════════════════════════════════
+   CTA
+══════════════════════════════════════ */
+.cta-block{margin:0 7vw 96px;border-radius:28px;background:var(--grad);padding:76px 7vw;text-align:center;color:#fff}
+.cta-block h2{font-family:var(--fd);font-size:clamp(2rem,4vw,3.1rem);font-weight:800;margin-bottom:.8rem}
+.cta-block p{font-size:1.05rem;opacity:.88;margin-bottom:2.5rem}
+.cta-form{display:flex;gap:.9rem;max-width:500px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.cta-inp{flex:1;min-width:220px;padding:14px 20px;border-radius:50px;border:none;font-size:1rem;font-family:var(--fb);outline:none;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
+.cta-btn{background:#fff;color:var(--sky);padding:14px 30px;border-radius:50px;border:none;font-size:1rem;font-weight:800;cursor:pointer;font-family:var(--fb);transition:transform .2s,box-shadow .2s}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.2)}
+
+/* ══════════════════════════════════════
+   CONTACTS
+══════════════════════════════════════ */
+.contacts-wrap{background:var(--white);border-radius:28px;margin:0 7vw;padding:60px 5vw;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr;gap:3.5rem}
+.ci h2{font-family:var(--fd);font-size:2.1rem;font-weight:800;margin-bottom:1rem}
+.ci p.sub{color:var(--muted);font-size:.93rem;line-height:1.7;margin-bottom:1.8rem}
+.ci-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.2rem}
+.ci-ico{width:46px;height:46px;border-radius:13px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.ci-lbl{font-size:.73rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.ci-val{font-weight:700;font-size:.97rem}
+.ci-val a:hover{color:var(--sky)}
+/* booking form */
+.bf h3{font-family:var(--fd);font-size:1.65rem;font-weight:800;margin-bottom:1.3rem}
+.bf .fi{margin-bottom:.9rem}
+.bf-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.9rem}
+.bf-submit{width:100%;padding:14px;background:var(--grad);border:none;border-radius:50px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--fb);transition:transform .2s,box-shadow .2s}
+.bf-submit:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(41,121,255,.4)}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{background:#edf1f9;padding:60px 7vw 32px;margin-top:90px}
+.ft-top{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.ft-logo{font-family:var(--fd);font-size:1.4rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.7rem}
+.ft-desc{font-size:.87rem;color:var(--muted);line-height:1.72}
+.ft-socials{display:flex;gap:.7rem;margin-top:1.2rem}
+.s-btn{width:38px;height:38px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;transition:transform .2s,box-shadow .2s}
+.s-btn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(41,121,255,.38)}
+.ft-col h4{font-weight:700;font-size:.93rem;margin-bottom:.9rem}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.ft-links a{font-size:.87rem;color:var(--muted);transition:color .2s}
+.ft-links a:hover{color:var(--sky)}
+.ft-bot{border-top:1px solid rgba(41,121,255,.12);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.ft-copy{font-size:.8rem;color:var(--muted)}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.overlay{position:fixed;inset:0;background:rgba(11,32,86,.32);backdrop-filter:blur(7px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.show{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:28px;padding:44px 40px;max-width:480px;width:92%;box-shadow:0 24px 80px rgba(41,121,255,.22);transform:translateY(30px);transition:transform .35s;position:relative}
+.overlay.show .modal{transform:translateY(0)}
+.modal h3{font-family:var(--fd);font-size:1.8rem;font-weight:800;margin-bottom:.5rem}
+.modal p.sub{color:var(--muted);font-size:.92rem;margin-bottom:1.5rem}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted)}
+.modal .fi{margin-bottom:.9rem}
+.modal .lf-submit{margin-top:.4rem}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+.toast{position:fixed;bottom:28px;right:28px;z-index:400;background:var(--grad);color:#fff;padding:16px 24px;border-radius:16px;font-weight:700;font-size:.93rem;box-shadow:0 8px 32px rgba(41,121,255,.42);transform:translateY(80px);opacity:0;transition:all .4s;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;padding-top:110px}
+  .hero-right{display:none}
+  .adv-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-wrap{grid-template-columns:repeat(2,1fr)}
+  .how-grid{grid-template-columns:1fr}
+  .how-grid::before{display:none}
+  .rev-grid{grid-template-columns:1fr}
+  .live-inner{grid-template-columns:1fr}
+  .contacts-wrap{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+  .burger{display:flex}
+  nav .nav-cta{display:none}
+}
+@media(max-width:600px){
+  .adv-grid{grid-template-columns:1fr}
+  .stats-wrap{grid-template-columns:1fr 1fr;padding:40px 6vw}
+  .fi-row,.bf-row,.lf-fi-row{grid-template-columns:1fr}
+  .hero-btns{flex-direction:column}
+  .btn-p,.btn-o{width:100%;text-align:center}
+  .cta-form{flex-direction:column}
+  .cta-inp{width:100%}
+  .modal{padding:32px 22px}
+  .ft-bot{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="nav-logo">🦷 Minbaev Dental</div>
+  <ul class="nav-links">
+    <li><a href="#adv">Услуги</a></li>
+    <li><a href="#how">Как работаем</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contacts">Контакты</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openModal()">Записаться</button>
+  <button class="burger" onclick="toggleMenu()" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#adv" onclick="closeMenu()">Услуги</a>
+  <a href="#how" onclick="closeMenu()">Как работаем</a>
+  <a href="#reviews" onclick="closeMenu()">Отзывы</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#contacts" onclick="closeMenu()">Контакты</a>
+  <button class="nav-cta" onclick="openModal();closeMenu()">Записаться на приём</button>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="hero-dots"></div>
+
+  <div class="hero-left reveal">
+    <div class="badge"><span class="dot-pulse"></span>Чирчик · Без выходных</div>
+    <h1 class="hero-h1">
+      Здоровые зубы —<br>
+      <span class="grad-text">красивая улыбка</span><br>
+      на всю жизнь
+    </h1>
+    <p class="hero-sub">Современная стоматология без боли и страха. Лечим, протезируем и отбеливаем — профессионально и с заботой.</p>
+    <ul class="checks">
+      <li><span class="chk">✓</span> Безболезненное лечение европейскими препаратами</li>
+      <li><span class="chk">✓</span> Стерильность и оборудование последнего поколения</li>
+      <li><span class="chk">✓</span> Опытные врачи с практикой более 10 лет</li>
+    </ul>
+    <div class="hero-btns">
+      <button class="btn-p" onclick="openModal()">Записаться на приём →</button>
+      <button class="btn-o" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Как это работает</button>
+    </div>
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="av">АМ</div><div class="av">СК</div>
+        <div class="av">ЮР</div><div class="av">НУ</div>
+      </div>
+      <p class="sp-text"><strong>500+ довольных клиентов</strong> уже улыбаются шире</p>
+    </div>
+  </div>
+
+  <div class="hero-right reveal">
+    <div class="hero-glow"></div>
+    <div class="img-frame">
+      <div class="img-inner">
+        <!-- Inline doctor SVG illustration -->
+        <svg viewBox="0 0 300 380" width="78%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2979ff"/>
+              <stop offset="100%" stop-color="#00c6fb"/>
+            </linearGradient>
+          </defs>
+          <!-- bg circle -->
+          <circle cx="150" cy="135" r="90" fill="url(#gA)" opacity=".18"/>
+          <!-- head -->
+          <circle cx="150" cy="110" r="46" fill="#FDDCB0"/>
+          <!-- hair -->
+          <ellipse cx="150" cy="80" rx="46" ry="30" fill="#1e3a6e"/>
+          <!-- eyes -->
+          <circle cx="136" cy="108" r="5" fill="#1a1a2e"/>
+          <circle cx="164" cy="108" r="5" fill="#1a1a2e"/>
+          <circle cx="137.5" cy="106.5" r="2" fill="#fff"/>
+          <circle cx="165.5" cy="106.5" r="2" fill="#fff"/>
+          <!-- smile -->
+          <path d="M138 122 Q150 135 162 122" stroke="#c07040" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <!-- coat -->
+          <rect x="78" y="150" width="144" height="200" rx="24" fill="#fff"/>
+          <!-- collar -->
+          <path d="M138 150 L150 195 L162 150" fill="#2979ff" opacity=".35"/>
+          <!-- stethoscope -->
+          <path d="M110 195 Q90 215 100 248 Q110 270 132 265" stroke="#2979ff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <circle cx="132" cy="265" r="9" fill="#2979ff"/>
+          <!-- pocket cross -->
+          <rect x="177" y="180" width="30" height="24" rx="6" fill="#e8f2ff" stroke="#2979ff" stroke-width="1.5"/>
+          <line x1="192" y1="184" x2="192" y2="200" stroke="#2979ff" stroke-width="2" stroke-linecap="round"/>
+          <line x1="184" y1="192" x2="200" y2="192" stroke="#2979ff" stroke-width="2" stroke-linecap="round"/>
+          <!-- tooth -->
+          <ellipse cx="192" cy="242" rx="24" ry="30" fill="#fff" stroke="#2979ff" stroke-width="2"/>
+          <path d="M173 250 Q180 275 192 280 Q204 275 211 250" fill="#e8f2ff" stroke="#2979ff" stroke-width="1.5"/>
+          <!-- sparkles -->
+          <text x="220" y="90" font-size="18" fill="#f6c90e">✦</text>
+          <text x="60" y="160" font-size="12" fill="#00c6fb" opacity=".6">✦</text>
+          <text x="240" y="175" font-size="10" fill="#2979ff" opacity=".5">✦</text>
+        </svg>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="fc-ico">⭐</div>
+      <div>
+        <div class="fc-l">Рейтинг клиники</div>
+        <div class="fc-v">4.9 / 5.0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TICKER ══ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Invisalign</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">3M ESPE</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Dentsply Sirona</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nobel Biocare</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Straumann</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Ivoclar Vivadent</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">GC Corporation</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Carestream Dental</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Danaher</span><span class="ticker-sep">✦</span>
+    <!-- duplicate -->
+    <span class="ticker-item">Invisalign</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">3M ESPE</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Dentsply Sirona</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nobel Biocare</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Straumann</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Ivoclar Vivadent</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">GC Corporation</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Carestream Dental</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Danaher</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<!-- ══ ADVANTAGES ══ -->
+<section class="section" id="adv">
+  <div class="center reveal">
+    <span class="s-tag">Почему мы</span>
+    <h2 class="s-title">6 причин выбрать<br>Minbaev Dental Clinic</h2>
+    <p class="s-sub">Мы не просто лечим зубы — мы создаём уверенность в каждой улыбке.</p>
+  </div>
+  <div class="adv-grid">
+    <div class="adv-card reveal"><div class="adv-ico">🦷</div><h3>Безболезненное лечение</h3><p>Современные анестетики и техники: даже сложные процедуры проходят комфортно. Страх — в прошлом.</p></div>
+    <div class="adv-card reveal"><div class="adv-ico">🔬</div><h3>Европейское оборудование</h3><p>Цифровой рентген, 3D-томография и полимеризационные лампы последнего поколения.</p></div>
+    <div class="adv-card reveal"><div class="adv-ico">👨‍⚕️</div><h3>Опытные врачи</h3><p>Сертифицированные специалисты с практикой 10+ лет. Постоянное обучение и рост.</p></div>
+    <div class="adv-card reveal"><div class="adv-ico">🛡️</div><h3>Полная стерильность</h3><p>Автоклавная стерилизация, одноразовые материалы, строгий контроль гигиены на каждом этапе.</p></div>
+    <div class="adv-card reveal"><div class="adv-ico">💎</div><h3>Эстетическая стоматология</h3><p>Виниры, отбеливание, художественная реставрация — создадим улыбку вашей мечты.</p></div>
+    <div class="adv-card reveal"><div class="adv-ico">📅</div><h3>Удобная запись</h3><p>Онлайн-запись, напоминания в мессенджер, гибкий график — без очередей и лишнего ожидания.</p></div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<div class="stats-wrap reveal">
+  <div><div class="stat-n" data-target="500">0</div><div class="stat-l">Довольных пациентов</div></div>
+  <div><div class="stat-n" data-target="10">0</div><div class="stat-l">Лет опыта</div></div>
+  <div><div class="stat-n" data-target="98">0</div><div class="stat-l">% положительных отзывов</div></div>
+  <div><div class="stat-n" data-target="15">0</div><div class="stat-l">Видов услуг</div></div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="section" id="how">
+  <div class="center reveal">
+    <span class="s-tag">Процесс</span>
+    <h2 class="s-title">Как это работает</h2>
+    <p class="s-sub">Три простых шага — и вы уже улыбаетесь увереннее.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-step reveal">
+      <div class="how-n">1</div>
+      <div class="how-ico">📞</div>
+      <h3>Записываетесь</h3>
+      <p>Оставьте заявку онлайн или позвоните нам. Мы подберём удобное время за 10 минут.</p>
+    </div>
+    <div class="how-step reveal">
+      <div class="how-n">2</div>
+      <div class="how-ico">🔍</div>
+      <h3>Консультация и диагностика</h3>
+      <p>Врач проводит детальный осмотр, делает снимки и составляет персональный план лечения.</p>
+    </div>
+    <div class="how-step reveal">
+      <div class="how-n">3</div>
+      <div class="how-ico">😁</div>
+      <h3>Результат и улыбка</h3>
+      <p>Выходите с идеальным результатом. Мы остаёмся на связи после — всегда.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATIC REVIEWS ══ -->
+<section class="section" id="reviews" style="padding-top:0">
+  <div class="center reveal">
+    <span class="s-tag">Отзывы</span>
+    <h2 class="s-title">Что говорят наши пациенты</h2>
+    <p class="s-sub">Реальные истории реальных людей.</p>
+  </div>
+  <div class="rev-grid">
+    <div class="rev-card reveal">
+      <div class="rev-q">"</div>
+      <p class="rev-txt">Боялась стоматологов всю жизнь. После первого визита в Minbaev Dental поняла, что страх остался в прошлом. Доктор объяснял каждый шаг — было совсем не больно!</p>
+      <div class="rev-foot"><div class="rev-av">ГА</div><div><div class="rev-name">Гульнора А.</div><div class="rev-stars">★★★★★</div></div></div>
+    </div>
+    <div class="rev-card reveal">
+      <div class="rev-q">"</div>
+      <p class="rev-txt">Поставили имплант — как новый! Процедура прошла быстро, после практически не было отёка. Врачи профессиональные, оборудование современное. Рекомендую всей семье.</p>
+      <div class="rev-foot"><div class="rev-av">ДМ</div><div><div class="rev-name">Давид М.</div><div class="rev-stars">★★★★★</div></div></div>
+    </div>
+    <div class="rev-card reveal">
+      <div class="rev-q">"</div>
+      <p class="rev-txt">Сделала отбеливание и виниры. Результат превзошёл все ожидания — улыбка мечты! Команда клиники — настоящие профессионалы своего дела.</p>
+      <div class="rev-foot"><div class="rev-av">НУ</div><div><div class="rev-name">Нилуфар У.</div><div class="rev-stars">★★★★★</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LIVE REVIEW SYSTEM ══ -->
+<div class="live-section reveal">
+  <div class="live-inner">
+    <!-- FORM -->
+    <div>
+      <span class="lf-tag">Ваш отзыв</span>
+      <h3 class="lf-title">Поделитесь впечатлением</h3>
+      <p class="lf-sub">Ваш опыт помогает другим пациентам сделать правильный выбор. Отзывы проверяются перед публикацией.</p>
+      <div>
+        <p style="font-weight:700;font-size:.85rem;margin-bottom:.5rem">Ваша оценка:</p>
+        <div class="star-row" id="starRow">
+          <button class="star-btn" data-v="1">★</button>
+          <button class="star-btn" data-v="2">★</button>
+          <button class="star-btn" data-v="3">★</button>
+          <button class="star-btn" data-v="4">★</button>
+          <button class="star-btn" data-v="5">★</button>
+        </div>
+      </div>
+      <textarea class="fi" id="rvTxt" placeholder="Расскажите о вашем визите..."></textarea>
+      <div class="fi-row">
+        <input class="fi" id="rvName" type="text" placeholder="Ваше имя">
+        <input class="fi" id="rvSvc" type="text" placeholder="Услуга (напр. Виниры)">
+      </div>
+      <button class="lf-submit" onclick="submitReview()">Отправить отзыв →</button>
+      <p class="lf-note">🔒 Отзыв появится после одобрения в Telegram</p>
+    </div>
+    <!-- FEED -->
+    <div>
+      <div class="pending-info">⏳ Новые отзывы ожидают вашего одобрения в Telegram</div>
+      <div class="feed-header">
+        <span class="feed-title">Последние одобренные отзывы</span>
+        <span class="feed-badge" id="feedCount">загрузка...</span>
+      </div>
+      <div class="feed-wrap" id="feedWrap">
+        <div class="feed-empty">Загружаем отзывы...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FAQ ══ -->
+<section class="section" id="faq" style="padding-top:60px">
+  <div class="center reveal">
+    <span class="s-tag">Вопросы</span>
+    <h2 class="s-title">Часто задаваемые вопросы</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal">
+      <div class="faq-q">Больно ли лечить зубы в вашей клинике? <span class="faq-arr">▾</span></div>
+      <div class="faq-a">Нет. Мы используем современные анестетики европейского производства. Даже пациенты с сильным страхом чувствуют лишь лёгкое давление. Ваш комфорт — наш приоритет.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Сколько стоит первичная консультация? <span class="faq-arr">▾</span></div>
+      <div class="faq-a">Первичная консультация и осмотр у нас бесплатные. После осмотра врач составит подробный план лечения с точными ценами — никаких скрытых расходов.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Принимаете ли вы детей? С какого возраста? <span class="faq-arr">▾</span></div>
+      <div class="faq-a">Да, работаем с детьми от 3 лет. Наши врачи имеют опыт детской стоматологии и умеют создать дружелюбную, игровую атмосферу для маленьких пациентов.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Как долго держатся результаты отбеливания? <span class="faq-arr">▾</span></div>
+      <div class="faq-a">При соблюдении рекомендаций — от 1 до 3 лет. После процедуры вы получите подробную инструкцию по уходу, которая поможет сохранить белизну надолго.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q">Работаете ли вы в выходные и праздники? <span class="faq-arr">▾</span></div>
+      <div class="faq-a">Да, принимаем без выходных с 09:00 до 20:00. В экстренных случаях обращайтесь по телефону — постараемся помочь в любое время.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta-block reveal" id="cta">
+  <h2>Запишитесь прямо сейчас</h2>
+  <p>Оставьте номер — перезвоним в течение 10 минут и подберём удобное время.</p>
+  <div class="cta-form">
+    <input class="cta-inp" id="ctaPhone" type="tel" placeholder="Ваш номер (+998...)">
+    <button class="cta-btn" onclick="sendCTA()">Позвоните мне →</button>
+  </div>
+</div>
+
+<!-- ══ CONTACTS ══ -->
+<section class="section" id="contacts" style="padding-top:60px">
+  <div class="contacts-wrap reveal">
+    <div class="ci">
+      <h2>Свяжитесь с нами</h2>
+      <p class="sub">Мы в Чирчике. Приезжайте или звоните — всегда рады помочь.</p>
+      <div class="ci-item"><div class="ci-ico">📍</div><div><div class="ci-lbl">Адрес</div><div class="ci-val">г. Чирчик, Узбекистан</div></div></div>
+      <div class="ci-item"><div class="ci-ico">📞</div><div><div class="ci-lbl">Телефон</div><div class="ci-val"><a href="tel:+998337005500">+998 33 700-55-00</a></div><div class="ci-val"><a href="tel:+998707151919">+998 70 715-19-19</a></div></div></div>
+      <div class="ci-item"><div class="ci-ico">📸</div><div><div class="ci-lbl">Instagram</div><div class="ci-val"><a href="https://www.instagram.com/minbaev.dentalclinic/" target="_blank">@minbaev.dentalclinic</a></div></div></div>
+      <div class="ci-item"><div class="ci-ico">🕐</div><div><div class="ci-lbl">Часы работы</div><div class="ci-val">Пн – Вс: 09:00 – 20:00</div></div></div>
+    </div>
+    <div class="bf">
+      <h3>Записаться на приём</h3>
+      <div class="bf-row">
+        <input class="fi" id="bName" type="text" placeholder="Ваше имя">
+        <input class="fi" id="bPhone" type="tel" placeholder="+998 XX XXX-XX-XX">
+      </div>
+      <select class="fi" id="bSvc" style="margin-bottom:.9rem">
+        <option value="">Выберите услугу</option>
+        <option>Консультация и осмотр (бесплатно)</option>
+        <option>Лечение кариеса</option>
+        <option>Удаление зуба</option>
+        <option>Имплантация</option>
+        <option>Отбеливание</option>
+        <option>Виниры</option>
+        <option>Ортодонтия (брекеты)</option>
+        <option>Детская стоматология</option>
+        <option>Другое</option>
+      </select>
+      <input class="fi" id="bDate" type="date" style="margin-bottom:.9rem">
+      <button class="bf-submit" onclick="submitBooking()">Записаться → придёт в Telegram</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-logo">🦷 Minbaev Dental Clinic</div>
+      <p class="ft-desc">Современная стоматология в Чирчике. Лечим с заботой, работаем на результат. Ваша улыбка — наша гордость.</p>
+      <div class="ft-socials">
+        <a href="https://www.instagram.com/minbaev.dentalclinic/" class="s-btn" target="_blank" title="Instagram">📸</a>
+        <a href="tel:+998337005500" class="s-btn" title="Позвонить">📞</a>
+        <a href="https://t.me/" class="s-btn" target="_blank" title="Telegram">✈️</a>
+      </div>
+    </div>
+    <div>
+      <h4>Услуги</h4>
+      <ul class="ft-links">
+        <li><a href="#adv">Лечение кариеса</a></li>
+        <li><a href="#adv">Имплантация</a></li>
+        <li><a href="#adv">Отбеливание</a></li>
+        <li><a href="#adv">Виниры</a></li>
+        <li><a href="#adv">Брекеты</a></li>
+        <li><a href="#adv">Детская стоматология</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Клиника</h4>
+      <ul class="ft-links">
+        <li><a href="#how">Как мы работаем</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+        <li><a href="tel:+998337005500">+998 33 700-55-00</a></li>
+        <li><a href="tel:+998707151919">+998 70 715-19-19</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <p class="ft-copy">© 2024 Minbaev Dental Clinic · г. Чирчик, Узбекистан</p>
+    <p class="ft-copy" style="color:var(--sky)">Работаем без выходных 09:00 – 20:00</p>
+  </div>
+</footer>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Запись на приём</h3>
+    <p class="sub">Заполните — перезвоним в течение 10 минут.</p>
+    <input class="fi" id="mName" type="text" placeholder="Ваше имя">
+    <input class="fi" id="mPhone" type="tel" placeholder="+998 XX XXX-XX-XX" style="margin-top:.8rem">
+    <select class="fi" id="mSvc" style="margin-top:.8rem">
+      <option value="">Выберите услугу</option>
+      <option>Консультация и осмотр (бесплатно)</option>
+      <option>Лечение кариеса</option>
+      <option>Удаление зуба</option>
+      <option>Имплантация</option>
+      <option>Отбеливание</option>
+      <option>Виниры</option>
+      <option>Ортодонтия (брекеты)</option>
+      <option>Детская стоматология</option>
+      <option>Другое</option>
+    </select>
+    <button class="lf-submit" onclick="submitModal()">Записаться →</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── CONFIG ── */
+const TG_TOKEN   = '8348564496:AAE-lfMiKRRPImPPG7bMIWxiPZo9sAvjmC4';
+const TG_CHAT    = '8571455593';
+
+/* ── HELPERS ── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function fmtDate(ts){ if(!ts) return ''; const d=new Date(ts); return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}) }
+function relTime(ts){
+  if(!ts) return '';
+  const diff=Date.now()-ts, m=Math.floor(diff/60000), h=Math.floor(diff/3600000), day=Math.floor(diff/86400000);
+  if(diff<120000) return 'только что';
+  if(h<1) return m+' мин назад';
+  if(day<1) return h+' ч назад';
+  if(day===1) return 'вчера';
+  return fmtDate(ts);
+}
+
+async function tgSend(text, replyMarkup){
+  const body = { chat_id:TG_CHAT, text, parse_mode:'Markdown' };
+  if(replyMarkup) body.reply_markup = replyMarkup;
+  try{
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+  } catch(e){ console.warn('TG error',e) }
+}
+
+/* ── NAV ── */
+window.addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('scrolled',scrollY>40) });
+function toggleMenu(){ document.getElementById('mobileMenu').classList.toggle('open') }
+function closeMenu(){ document.getElementById('mobileMenu').classList.remove('open') }
+
+/* ── SCROLL REVEAL ── */
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ── COUNTER ── */
+const cntObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.querySelectorAll('.stat-n').forEach(el=>{
+      const tgt=+el.dataset.target, suf=tgt===98?'%':'+';
+      let n=0; const step=Math.ceil(tgt/55);
+      const t=setInterval(()=>{ n=Math.min(n+step,tgt); el.textContent=n+suf; if(n>=tgt) clearInterval(t) },20);
+    });
+    cntObs.unobserve(e.target);
+  });
+},{threshold:.4});
+const sw=document.querySelector('.stats-wrap');
+if(sw) cntObs.observe(sw);
+
+/* ── FAQ ── */
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement, open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!open) item.classList.add('open');
+  });
+});
+
+/* ── TOAST ── */
+function showToast(msg, duration=4500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+/* ── MODAL ── */
+function openModal(){ document.getElementById('overlay').classList.add('show'); document.body.style.overflow='hidden' }
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); document.body.style.overflow='' }
+function closeOverlay(e){ if(e.target===document.getElementById('overlay')) closeModal() }
+
+/* ══════════════════════════════════
+   BOOKING — отправка записи в Telegram
+══════════════════════════════════ */
+async function sendBooking(name, phone, svc, date, source){
+  const msg =
+    `📅 *НОВАЯ ЗАПИСЬ — Minbaev Dental*\n`+
+    `━━━━━━━━━━━━━━━━━━\n`+
+    `👤 Имя: *${name||'не указано'}*\n`+
+    `📞 Телефон: *${phone}*\n`+
+    `💊 Услуга: ${svc||'не выбрана'}\n`+
+    `📆 Дата: ${date||'не указана'}\n`+
+    `🔗 Источник: ${source}\n`+
+    `━━━━━━━━━━━━━━━━━━\n`+
+    `⚡️ Свяжитесь с пациентом в течение 10 минут!`;
+  await tgSend(msg);
+}
+
+function submitModal(){
+  const name=document.getElementById('mName').value.trim();
+  const phone=document.getElementById('mPhone').value.trim();
+  const svc=document.getElementById('mSvc').value;
+  if(!phone){ highlight('mPhone'); return }
+  sendBooking(name,phone,svc,'','Кнопка «Записаться» (шапка)');
+  closeModal();
+  showToast('✅ Заявка отправлена! Ждите звонка в течение 10 минут.');
+  clearFields(['mName','mPhone']); document.getElementById('mSvc').value='';
+}
+
+function submitBooking(){
+  const name=document.getElementById('bName').value.trim();
+  const phone=document.getElementById('bPhone').value.trim();
+  const svc=document.getElementById('bSvc').value;
+  const date=document.getElementById('bDate').value;
+  if(!phone){ highlight('bPhone'); return }
+  sendBooking(name,phone,svc,date,'Форма записи (раздел Контакты)');
+  showToast('✅ Заявка отправлена! Перезвоним в течение 10 минут.');
+  clearFields(['bName','bPhone','bDate']); document.getElementById('bSvc').value='';
+}
+
+function sendCTA(){
+  const phone=document.getElementById('ctaPhone').value.trim();
+  if(!phone){ highlight('ctaPhone'); return }
+  sendBooking('','Обратный звонок: '+phone,'','','CTA-блок');
+  showToast('✅ Отлично! Перезвоним совсем скоро.');
+  document.getElementById('ctaPhone').value='';
+}
+
+/* ══════════════════════════════════
+   REVIEW SYSTEM — отзывы с модерацией
+══════════════════════════════════ */
+let selStars = 0;
+
+/* Star selector */
+document.querySelectorAll('.star-btn').forEach(btn=>{
+  btn.addEventListener('mouseover',()=>{
+    const v=+btn.dataset.v;
+    document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('lit',i<v));
+  });
+  btn.addEventListener('mouseout',()=>{
+    document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('lit',i<selStars));
+  });
+  btn.addEventListener('click',()=>{
+    selStars=+btn.dataset.v;
+    document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('lit',i<selStars));
+  });
+});
+
+/* Base (hardcoded) approved reviews shown always */
+const BASE = [
+  {id:'b1',name:'Гульнора А.',stars:5,svc:'Лечение',txt:'Боялась стоматологов всю жизнь. После первого визита поняла — страх в прошлом! Было совсем не больно.',ts:Date.now()-172800000},
+  {id:'b2',name:'Давид М.',stars:5,svc:'Имплантация',txt:'Поставили имплант — как новый! Врачи профессиональные, оборудование современное. Рекомендую всей семье.',ts:Date.now()-432000000},
+  {id:'b3',name:'Нилуфар У.',stars:5,svc:'Виниры',txt:'Сделала виниры — результат превзошёл ожидания. Улыбка мечты! Команда — настоящие профессионалы.',ts:Date.now()-864000000},
+];
+
+/* Load approved from webhook server */
+const WEBHOOK_URL = 'https://dental-webhook.onrender.com';
+
+async function loadFeed(){
+  let approved=[];
+  try{
+    const res=await fetch(`${WEBHOOK_URL}/approved`);
+    if(res.ok) approved=await res.json();
+  }catch(e){ approved=[] }
+
+  const all=[...approved].reverse().concat(BASE);
+  const wrap=document.getElementById('feedWrap');
+  const cnt=document.getElementById('feedCount');
+  cnt.textContent=all.length+' отзывов';
+
+  if(!all.length){ wrap.innerHTML='<div class="feed-empty">Пока нет отзывов — будьте первым!</div>'; return }
+
+  wrap.innerHTML=all.map(r=>`
+    <div class="feed-item">
+      <div class="fi-head">
+        <span class="fi-name">${esc(r.name)}</span>
+        <span class="fi-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span>
+      </div>
+      ${r.svc?`<div class="fi-svc">💊 ${esc(r.svc)}</div>`:''}
+      <div class="fi-txt">"${esc(r.txt)}"</div>
+      <div class="fi-time">${relTime(r.ts)}</div>
+    </div>`).join('');
+}
+
+/* Submit new review */
+async function submitReview(){
+  const name=document.getElementById('rvName').value.trim();
+  const txt =document.getElementById('rvTxt').value.trim();
+  const svc =document.getElementById('rvSvc').value.trim();
+  if(!name){ highlight('rvName'); return }
+  if(!txt){  highlightEl(document.getElementById('rvTxt')); return }
+  if(!selStars){ showToast('⭐ Пожалуйста, выберите оценку!',3000); return }
+
+  const review={id:'r'+Date.now(), name, txt, svc, stars:selStars, ts:Date.now(), status:'pending'};
+
+  /* Save to pending on server */
+  try{
+    await fetch(`${WEBHOOK_URL}/pending`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(review)
+    });
+  }catch(e){ console.warn('pending save error',e) }
+
+  /* Notify admin in Telegram with inline approve/reject buttons */
+  const stars='★'.repeat(review.stars)+'☆'.repeat(5-review.stars);
+  const msg=
+    `⭐ *НОВЫЙ ОТЗЫВ — на модерации*\n`+
+    `━━━━━━━━━━━━━━━━━━\n`+
+    `👤 ${esc(name)}   ${stars}\n`+
+    `💊 Услуга: ${svc||'не указана'}\n\n`+
+    `📝 _"${esc(txt)}"_\n`+
+    `━━━━━━━━━━━━━━━━━━\n`+
+    `🆔 ID: \`${review.id}\`\n`+
+    `⏰ ${new Date().toLocaleString('ru-RU')}`;
+
+  await tgSend(msg,{
+    inline_keyboard:[[
+      {text:'✅ Одобрить', callback_data:`approve_${review.id}`},
+      {text:'❌ Отклонить', callback_data:`reject_${review.id}`}
+    ]]
+  });
+
+  /* Reset */
+  clearFields(['rvName','rvTxt','rvSvc']); selStars=0;
+  document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
+  showToast('🙏 Спасибо за отзыв! Он появится после проверки.',5000);
+}
+
+/*
+  ╔══════════════════════════════════════════════════════╗
+  ║  КАК РАБОТАЕТ МОДЕРАЦИЯ ЧЕРЕЗ TELEGRAM               ║
+  ║                                                      ║
+  ║  1. Пациент оставляет отзыв на сайте                 ║
+  ║  2. Вам в Telegram приходит сообщение с кнопками:    ║
+  ║     [✅ Одобрить]  [❌ Отклонить]                    ║
+  ║                                                      ║
+  ║  3. Для работы кнопок нужен простой webhook-сервер.  ║
+  ║     Пример (Node.js, 15 строк) — спросите нас,       ║
+  ║     развернём бесплатно на Render.com за 5 минут.    ║
+  ║                                                      ║
+  ║  4. При одобрении webhook добавляет отзыв в ключ     ║
+  ║     'mdc_approved' и он сразу появляется на сайте.   ║
+  ╚══════════════════════════════════════════════════════╝
+*/
+
+/* ── UTILS ── */
+function highlight(id){ const el=document.getElementById(id); el.style.borderColor='#f43f5e'; el.focus(); setTimeout(()=>el.style.borderColor='',2500) }
+function highlightEl(el){ el.style.borderColor='#f43f5e'; el.focus(); setTimeout(()=>el.style.borderColor='',2500) }
+function clearFields(ids){ ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value='' }) }
+
+/* ── INIT ── */
+loadFeed();
+setInterval(loadFeed, 30000); // автообновление каждые 30 сек
+</script>
+</body>
+</html>
