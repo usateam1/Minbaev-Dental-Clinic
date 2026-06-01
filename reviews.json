@@ -1,1 +1,14 @@
-{"pending":[],"approved":[]}
+{
+  "pending": [
+    {
+      "id": "r1780330676495",
+      "name": "вкенвкен",
+      "txt": "5евнек",
+      "svc": "квенвк",
+      "stars": 5,
+      "ts": 1780330676495,
+      "status": "pending"
+    }
+  ],
+  "approved": []
+}
