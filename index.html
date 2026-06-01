@@ -827,8 +827,21 @@ function sendCTA(){
 }
 
 /* ══════════════════════════════════
-   REVIEW SYSTEM — отзывы с модерацией
+   REVIEW SYSTEM — GitHub Storage
+   Репозиторий: usateam1/Minbaev-Dental-Clinic
+   Файл хранения: reviews.json в корне репо
 ══════════════════════════════════ */
+
+// ─── НАСТРОЙКИ ───────────────────────────────────────────
+// Замените GITHUB_TOKEN на ваш Personal Access Token
+// (github.com → Settings → Developer settings → Personal access tokens → Fine-grained)
+// Права токена: Contents → Read and Write (только для этого репо)
+const GH_OWNER  = 'usateam1';
+const GH_REPO   = 'Minbaev-Dental-Clinic';
+const GH_FILE   = 'reviews.json';
+const GH_TOKEN  = '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'; // ← единственное что нужно заменить
+// ─────────────────────────────────────────────────────────
+
 let selStars = 0;
 
 /* Star selector */
@@ -853,52 +866,78 @@ const BASE = [
   {id:'b3',name:'Нилуфар У.',stars:5,svc:'Виниры',txt:'Сделала виниры — результат превзошёл ожидания. Улыбка мечты! Команда — настоящие профессионалы.',ts:Date.now()-864000000},
 ];
 
-/* Load approved from webhook server */
-const WEBHOOK_URL = 'https://dental-webhooks-production.up.railway.app';
+/* ── GitHub API helpers ── */
+const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+const GH_HEADERS = {
+  'Authorization': `token ${GH_TOKEN}`,
+  'Accept': 'application/vnd.github+json',
+  'X-GitHub-Api-Version': '2022-11-28'
+};
 
-// Сохранить pending отзыв локально
-function savePendingLocally(review){
-  try{
-    const list = JSON.parse(localStorage.getItem('mdc_pending_local')||'[]');
-    // Не дублировать
-    if(!list.find(r=>r.id===review.id)){
-      list.unshift(review);
-      localStorage.setItem('mdc_pending_local', JSON.stringify(list));
-    }
-  }catch(e){}
+async function ghRead() {
+  try {
+    const res = await fetch(GH_API, { headers: GH_HEADERS });
+    if (res.status === 404) return { data: { pending: [], approved: [] }, sha: null };
+    if (!res.ok) throw new Error('read failed');
+    const meta = await res.json();
+    const content = JSON.parse(atob(meta.content.replace(/\n/g,'')));
+    return { data: content, sha: meta.sha };
+  } catch(e) {
+    console.warn('ghRead error', e);
+    return { data: { pending: [], approved: [] }, sha: null };
+  }
 }
 
-// Загрузить локальные pending, убрать уже одобрённые
-function getLocalPending(approvedIds){
-  try{
+async function ghWrite(data, sha) {
+  const body = {
+    message: 'update reviews',
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(GH_API, {
+    method: 'PUT',
+    headers: { ...GH_HEADERS, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'write failed');
+  }
+  return await res.json();
+}
+
+/* ── Local pending (показать сразу после отправки) ── */
+function savePendingLocally(review) {
+  try {
     const list = JSON.parse(localStorage.getItem('mdc_pending_local')||'[]');
-    // Удалить те что уже одобрены — чтобы не дублировать
+    if (!list.find(r=>r.id===review.id)) { list.unshift(review); localStorage.setItem('mdc_pending_local', JSON.stringify(list)); }
+  } catch(e) {}
+}
+function getLocalPending(approvedIds) {
+  try {
+    const list = JSON.parse(localStorage.getItem('mdc_pending_local')||'[]');
     const filtered = list.filter(r=>!approvedIds.includes(r.id));
     localStorage.setItem('mdc_pending_local', JSON.stringify(filtered));
     return filtered;
-  }catch(e){ return [] }
+  } catch(e) { return []; }
 }
 
-async function loadFeed(){
-  let approved=[];
-  try{
-    const res=await fetch(`${WEBHOOK_URL}/approved`);
-    if(res.ok) approved=await res.json();
-  }catch(e){ approved=[] }
-
+/* ── Load & render feed ── */
+async function loadFeed() {
+  const { data } = await ghRead();
+  const approved = data.approved || [];
   const approvedIds = approved.map(r=>r.id);
   const localPending = getLocalPending(approvedIds);
 
-  // Порядок: мои pending сверху → одобренные → базовые
-  const all=[...localPending, ...approved.slice().reverse(), ...BASE];
-  const wrap=document.getElementById('feedWrap');
-  const cnt=document.getElementById('feedCount');
-  cnt.textContent=all.length+' отзывов';
+  const all = [...localPending, ...approved.slice().reverse(), ...BASE];
+  const wrap = document.getElementById('feedWrap');
+  const cnt  = document.getElementById('feedCount');
+  cnt.textContent = all.length + ' отзывов';
 
-  if(!all.length){ wrap.innerHTML='<div class="feed-empty">Пока нет отзывов — будьте первым!</div>'; return }
+  if (!all.length) { wrap.innerHTML='<div class="feed-empty">Пока нет отзывов — будьте первым!</div>'; return; }
 
-  wrap.innerHTML=all.map(r=>{
-    const isPending = r.status==='pending';
+  wrap.innerHTML = all.map(r => {
+    const isPending = r.status === 'pending';
     return `
     <div class="feed-item" style="${isPending?'border:1.5px dashed rgba(41,121,255,.35)':''}">
       <div class="fi-head">
@@ -910,73 +949,62 @@ async function loadFeed(){
       <div class="fi-time" style="${isPending?'color:var(--sky);font-weight:600':''}">
         ${isPending ? '⏳ Ожидает одобрения администратором' : relTime(r.ts)}
       </div>
-    </div>`
+    </div>`;
   }).join('');
 }
 
-/* Submit new review */
-async function submitReview(){
-  const name=document.getElementById('rvName').value.trim();
-  const txt =document.getElementById('rvTxt').value.trim();
-  const svc =document.getElementById('rvSvc').value.trim();
-  if(!name){ highlight('rvName'); return }
-  if(!txt){  highlightEl(document.getElementById('rvTxt')); return }
-  if(!selStars){ showToast('⭐ Пожалуйста, выберите оценку!',3000); return }
+/* ── Submit new review ── */
+async function submitReview() {
+  const name = document.getElementById('rvName').value.trim();
+  const txt  = document.getElementById('rvTxt').value.trim();
+  const svc  = document.getElementById('rvSvc').value.trim();
+  if (!name) { highlight('rvName'); return; }
+  if (!txt)  { highlightEl(document.getElementById('rvTxt')); return; }
+  if (!selStars) { showToast('⭐ Пожалуйста, выберите оценку!', 3000); return; }
 
-  // Показать состояние загрузки на кнопке
   const btn = document.querySelector('.lf-submit');
   const origText = btn.textContent;
-  btn.textContent = '⏳ Отправляем...';
+  btn.textContent = '⏳ Сохраняем...';
   btn.disabled = true;
 
-  const review={id:'r'+Date.now(), name, txt, svc, stars:selStars, ts:Date.now(), status:'pending'};
+  const review = { id:'r'+Date.now(), name, txt, svc, stars:selStars, ts:Date.now(), status:'pending' };
 
-  /* Отправить на сервер */
-  let sent = false;
-  try{
-    const resp = await fetch(`${WEBHOOK_URL}/pending`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(review)
-    });
-    if(resp.ok) sent = true;
-  }catch(e){ console.warn('pending error',e); }
+  try {
+    const { data, sha } = await ghRead();
+    data.pending = data.pending || [];
+    data.approved = data.approved || [];
+    data.pending.unshift(review);
+    await ghWrite(data, sha);
 
-  // Сброс кнопки
-  btn.textContent = origText;
-  btn.disabled = false;
-
-  if(!sent){
-    showToast('⚠️ Сервер недоступен. Попробуйте через минуту.',5000);
-    return;
+    savePendingLocally(review);
+    await loadFeed();
+    clearFields(['rvName','rvTxt','rvSvc']); selStars = 0;
+    document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
+    showToast('🙏 Спасибо за отзыв! Он появится после проверки администратором.', 5000);
+  } catch(e) {
+    console.error(e);
+    showToast('⚠️ Ошибка сохранения. Проверьте токен или попробуйте позже.', 5000);
   }
 
-  // Сохранить локально — чтобы не пропадал при обновлении ленты
-  savePendingLocally(review);
-  // Перерисовать ленту сразу
-  await loadFeed();
-
-  /* Reset формы */
-  clearFields(['rvName','rvTxt','rvSvc']); selStars=0;
-  document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
-  showToast('🙏 Спасибо за отзыв! Он появится после проверки администратором.',5000);
+  btn.textContent = origText;
+  btn.disabled = false;
 }
 
 /*
-  ╔══════════════════════════════════════════════════════╗
-  ║  КАК РАБОТАЕТ МОДЕРАЦИЯ ЧЕРЕЗ TELEGRAM               ║
-  ║                                                      ║
-  ║  1. Пациент оставляет отзыв на сайте                 ║
-  ║  2. Вам в Telegram приходит сообщение с кнопками:    ║
-  ║     [✅ Одобрить]  [❌ Отклонить]                    ║
-  ║                                                      ║
-  ║  3. Для работы кнопок нужен простой webhook-сервер.  ║
-  ║     Пример (Node.js, 15 строк) — спросите нас,       ║
-  ║     развернём бесплатно на Render.com за 5 минут.    ║
-  ║                                                      ║
-  ║  4. При одобрении webhook добавляет отзыв в ключ     ║
-  ║     'mdc_approved' и он сразу появляется на сайте.   ║
-  ╚══════════════════════════════════════════════════════╝
+  ╔════════════════════════════════════════════════════╗
+  ║  КАК ОДОБРЯТЬ ОТЗЫВЫ (без сервера!)               ║
+  ║                                                    ║
+  ║  1. Пациент оставляет отзыв → он попадает в        ║
+  ║     reviews.json → поле "pending"                  ║
+  ║                                                    ║
+  ║  2. Вы открываете github.com/usateam1/             ║
+  ║     Minbaev-Dental-Clinic/blob/main/reviews.json   ║
+  ║                                                    ║
+  ║  3. Нажимаете карандаш (Edit), переносите отзыв    ║
+  ║     из "pending" в "approved", сохраняете          ║
+  ║                                                    ║
+  ║  4. Отзыв сразу появляется на сайте!               ║
+  ╚════════════════════════════════════════════════════╝
 */
 
 /* ── UTILS ── */
@@ -986,7 +1014,8 @@ function clearFields(ids){ ids.forEach(id=>{ const el=document.getElementById(id
 
 /* ── INIT ── */
 loadFeed();
-setInterval(loadFeed, 30000); // автообновление каждые 30 сек
+setInterval(loadFeed, 60000); // автообновление каждую минуту
+
 </script>
 </body>
 </html>
