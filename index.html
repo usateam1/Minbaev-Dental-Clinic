@@ -880,7 +880,18 @@ async function loadFeed(){
     try {
       const approvedIds = approved.map(r=>r.id);
       const stored = JSON.parse(localStorage.getItem('mdc_pending')||'[]');
-      localPending = stored.filter(r=>!approvedIds.includes(r.id));
+      // Убираем одобренные, а rejected проверяем в Supabase
+      const pending_filtered = stored.filter(r=>!approvedIds.includes(r.id));
+      // Для каждого pending проверяем не отклонён ли он
+      const checks = await Promise.all(pending_filtered.map(async r => {
+        try {
+          const chk = await fetch(SUPABASE_URL+'/rest/v1/reviews?id=eq.'+r.id+'&select=status', {headers: SB_HEADERS});
+          const rows = chk.ok ? await chk.json() : [];
+          if (rows.length && rows[0].status === 'rejected') return null;
+        } catch(e) {}
+        return r;
+      }));
+      localPending = checks.filter(Boolean);
       localStorage.setItem('mdc_pending', JSON.stringify(localPending));
     } catch(e){}
 
