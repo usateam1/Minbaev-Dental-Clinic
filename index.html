@@ -936,6 +936,13 @@ async function submitReview(){
       const err = await res.text();
       throw new Error(err);
     }
+    /* Уведомляем бота в Telegram */
+    fetch('https://dental-bot-6e9z.vercel.app/api/notify', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(review)
+    }).catch(()=>{});
+
     /* Сохраняем локально чтобы сразу показать */
     try {
       const stored = JSON.parse(localStorage.getItem('mdc_pending')||'[]');
